@@ -1,45 +1,49 @@
 export default class Calculator {
 
+    private singleDelimiterPattern = /^\/\/(.)\n/;
+    private multiDelimiterPattern = /^\/\/(\[.*?\])+\n/;
+    private defaultDelimiterPattern = /,|\n/;
+
     add(input: string) {
         if (!input) return 0;
 
         //default delimiter
-        let delimiterMatcher = /,|\n/;
+        let delimiterMatcher = this.defaultDelimiterPattern;
 
         //check if custom delimiter input is provided
         if(input.startsWith('//')){
-            const singleDelimiterPattern = /^\/\/(.)\n/;
-            const singleDelimiterMatch = input.match(singleDelimiterPattern);
+            const singleDelimiterMatch = input.match(this.singleDelimiterPattern);
 
-            // Single character delimiter found
+            // single character delimiter found
             if (singleDelimiterMatch) {
                 const [delimiterSection, customDelimiter] = singleDelimiterMatch;
                 delimiterMatcher = new RegExp(customDelimiter);
 
-                // Update input by removing the delimiter declaration
+                // removing the delimiter declaration in input
                 input = input.substring(delimiterSection.length);
             } else {
-                // Check for multiple delimiters enclosed in square brackets
-                const multiDelimiterPattern = /^\/\/(\[.*?\])+\n/;
-                const multiDelimiterMatch = input.match(multiDelimiterPattern);
+                // check for multiple delimiters enclosed in square brackets
+                const multiDelimiterMatch = input.match(this.multiDelimiterPattern);
 
                 if(!multiDelimiterMatch?.length){
                     throw new Error("Custom Delimiter Not Found")
                 }
 
-                // Extract all delimiters enclosed in square brackets
+                // extract all delimiters enclosed in square brackets
                 const delimiterSection = multiDelimiterMatch[0];
                 const delimiters = [...delimiterSection.matchAll(/\[([^\]]+)\]/g)].map(([section, delimiter]) => delimiter);
 
-                // Create a regular expression to match any of the delimiters
+                // create a regular expression to match any of the delimiters
                 delimiterMatcher = new RegExp(delimiters.join('|'));
 
-                // Update input to exclude the delimiter declaration part
+                // removing the delimiter declaration in input
                 input = input.substring(delimiterSection.length);
             }
         }
 
         const numbers = input.split(delimiterMatcher).map(item => Number(item));
+        
+        // checking for negative numbers
         const negatives = numbers.filter(num => num < 0);
         if (negatives.length) {
             throw new Error(`Negatives not allowed: ${negatives.join(', ')}`);
