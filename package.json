@@ -1,0 +1,29 @@
+{
+  "name": "tdd-calculator",
+  "version": "1.0.0",
+  "description": "tdd calculator",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavan-kaushal/tdd-calculator.git"
+  },
+  "keywords": [
+    "tdd",
+    "stringcalculator"
+  ],
+  "author": "pavan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pavan-kaushal/tdd-calculator/issues"
+  },
+  "homepage": "https://github.com/pavan-kaushal/tdd-calculator#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
