@@ -1,3 +1,5 @@
+import { escapeSpecialCharacters } from "./utils/helpers";
+
 export default class Calculator {
 
     private singleDelimiterPattern = /^\/\/(.)\n/;
@@ -17,7 +19,7 @@ export default class Calculator {
             // single character delimiter found
             if (singleDelimiterMatch) {
                 const [delimiterSection, customDelimiter] = singleDelimiterMatch;
-                delimiterMatcher = new RegExp(customDelimiter);
+                delimiterMatcher = new RegExp(escapeSpecialCharacters(customDelimiter));
 
                 // removing the delimiter declaration in input
                 input = input.substring(delimiterSection.length);
@@ -31,7 +33,7 @@ export default class Calculator {
 
                 // extract all delimiters enclosed in square brackets
                 const delimiterSection = multiDelimiterMatch[0];
-                const delimiters = [...delimiterSection.matchAll(/\[([^\]]+)\]/g)].map(([section, delimiter]) => delimiter);
+                const delimiters = [...delimiterSection.matchAll(/\[([^\]]+)\]/g)].map(([section, delimiter]) => escapeSpecialCharacters(delimiter));
 
                 // create a regular expression to match any of the delimiters
                 delimiterMatcher = new RegExp(delimiters.join('|'));
