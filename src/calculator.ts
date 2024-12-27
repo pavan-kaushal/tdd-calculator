@@ -7,7 +7,7 @@ export default class Calculator {
     private defaultDelimiterPattern = /,|\n/;
 
     add(input: string) {
-        if (!input) return 0;
+        if (!input.trim()) return 0;
 
         //default delimiter
         let delimiterMatcher = this.defaultDelimiterPattern;
@@ -43,14 +43,26 @@ export default class Calculator {
             }
         }
 
-        const numbers = input.split(delimiterMatcher).map(item => Number(item));
-        
-        // checking for negative numbers
+        // Split input based on the delimiter and filter out empty values
+        const numbers = input.split(delimiterMatcher)
+            .map(item => Number(item))
+            .filter(num => !isNaN(num));
+
+        // Edge case: if no valid numbers exist after parsing
+        if (numbers.length === 0) {
+            return 0
+        }
+
+        // Edge case: check for negative numbers
         const negatives = numbers.filter(num => num < 0);
         if (negatives.length) {
             throw new Error(`Negatives not allowed: ${negatives.join(', ')}`);
         }
 
-        return numbers.filter(num => num <= 1000).reduce((sum, num) => sum + num, 0);
+        // Edge case: ignore numbers greater than 1000
+        const validNumbers = numbers.filter(num => num <= 1000);
+
+        // Return the sum of valid numbers
+        return validNumbers.reduce((sum, num) => sum + num, 0);
     }
 }
