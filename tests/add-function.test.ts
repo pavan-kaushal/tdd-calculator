@@ -53,4 +53,28 @@ describe('Calculator Add Function', () => {
     expect(calculator.add('//[$][^]\n1$2^6')).toBe(9);
     expect(calculator.add('//|\n1|2|6')).toBe(9);
   });
+
+  it('should handle multiple numbers separated by different delimiters', () => {
+    expect(calculator.add('//[;][@]\n1;2@3')).toBe(6);
+  });
+
+  it('should return 0 when input contains only delimiters', () => {
+    expect(calculator.add('//;\n;;;')).toBe(0);
+  });
+
+  it('should handle input with leading custom delimiter declaration and numbers', () => {
+    expect(calculator.add('//;\n;1;2')).toBe(3);
+  });
+
+  it('should return the sum of numbers with multiple delimiters and empty values', () => {
+    expect(calculator.add('//[;][,]\n1;;,2,3')).toBe(6);
+  });
+
+  it('should return 0 if no valid numbers are found after delimiters', () => {
+    expect(calculator.add('//;\n;x;yy;')).toBe(0);
+  });
+
+  it('should allow multiple custom delimiters and ignore extra spaces', () => {
+    expect(calculator.add('//[;][|]\n1 ;2 | 3')).toBe(6);
+  });
 });
